@@ -1,75 +1,70 @@
 direction: down
 
+start: 开始
+start.shape: oval
+start.style.fill: "#dff7f3"
 
-  start: 开始
-  start.shape: oval
-  start.style.fill: "#dff7f3"
+input_cred: 输入用户名密码
+input_cred.shape: parallelogram
+input_cred.style.fill: "#e7f8ec"
 
-  input_cred: 输入用户名密码
-  input_cred.shape: parallelogram
-  input_cred.style.fill: "#e7f8ec"
+call_login: POST /user/login
+call_login.shape: parallelogram
+call_login.style.fill: "#e7f8ec"
 
-  call_login: POST /user/login
-  call_login.shape: parallelogram
-  call_login.style.fill: "#e7f8ec"
+save_state: 写入 Pinia(token/role/userId/username)
+save_state.style.fill: "#e8f1ff"
 
-  save_state: 写入 Pinia(token/role/userId/username)
-  save_state.style.fill: "#e8f1ff"
+next_req: 后续请求自动带 JWT
+next_req.style.fill: "#e8f1ff"
 
-  next_req: 后续请求自动带 JWT
-  next_req.style.fill: "#e8f1ff"
+end_ok: 登录后进入系统
+end_ok.shape: oval
+end_ok.style.fill: "#dff7f3"
 
-  end_ok: 登录后进入系统
-  end_ok.shape: oval
-  end_ok.style.fill: "#dff7f3"
+end_fail: 结束(未登录)
+end_fail.shape: oval
+end_fail.style.fill: "#dff7f3"
 
-  end_fail: 结束(未登录)
-  end_fail.shape: oval
-  end_fail.style.fill: "#dff7f3"
+check_user: 校验用户名存在
+check_user.shape: diamond
+check_user.style.fill: "#fff1dc"
 
+verify_pwd: 校验密码哈希(md5+salt)
+verify_pwd.shape: diamond
+verify_pwd.style.fill: "#fff1dc"
 
-  check_user: 校验用户名存在
-  check_user.shape: diamond
-  check_user.style.fill: "#fff1dc"
+gen_jwt: 生成JWT(id, role)
+gen_jwt.style.fill: "#e8f1ff"
 
-  verify_pwd: 校验密码哈希(md5+salt)
-  verify_pwd.shape: diamond
-  verify_pwd.style.fill: "#fff1dc"
+login_resp_ok: 返回 success=true + token
+login_resp_ok.shape: parallelogram
+login_resp_ok.style.fill: "#e7f8ec"
 
-  gen_jwt: 生成JWT(id, role)
-  gen_jwt.style.fill: "#e8f1ff"
+login_resp_fail: 返回 success=false(msg)
+login_resp_fail.shape: parallelogram
+login_resp_fail.style.fill: "#ffe8e8"
 
-  login_resp_ok: 返回 success=true + token
-  login_resp_ok.shape: parallelogram
-  login_resp_ok.style.fill: "#e7f8ec"
+auth_ok: JWT是否有效或访问无需登录的接口
+auth_ok.shape: diamond
+auth_ok.style.fill: "#fff1dc"
 
-  login_resp_fail: 返回 success=false(msg)
-  login_resp_fail.shape: parallelogram
-  login_resp_fail.style.fill: "#ffe8e8"
+admin_forbidden: 是否访问/admin且非管理员
+admin_forbidden.shape: diamond
+admin_forbidden.style.fill: "#fff1dc"
 
-  auth_ok: JWT是否有效或路径豁免
-  auth_ok.shape: diamond
-  auth_ok.style.fill: "#fff1dc"
+allow_handler: 放行业务处理
+allow_handler.style.fill: "#e8f1ff"
 
-  admin_forbidden: 是否访问/admin且非管理员
-  admin_forbidden.shape: diamond
-  admin_forbidden.style.fill: "#fff1dc"
+reject_401: 返回401未授权
+reject_401.style.fill: "#ffe8e8"
 
-  allow_handler: 放行业务处理
-  allow_handler.style.fill: "#e8f1ff"
+reject_403: 返回403无权限
+reject_403.style.fill: "#ffe8e8"
 
-  reject_401: 返回401未授权
-  reject_401.style.fill: "#ffe8e8"
-
-  reject_403: 返回403无权限
-  reject_403.style.fill: "#ffe8e8"
-
-
-
-  user_table: user表(用户名/密码哈希/角色)
-  user_table.shape: cylinder
-  user_table.style.fill: "#e7f8ec"
-
+user_table: user表(用户名/密码哈希/角色)
+user_table.shape: cylinder
+user_table.style.fill: "#e7f8ec"
 
 start -> input_cred -> call_login
 call_login -> check_user
@@ -93,3 +88,15 @@ admin_forbidden -> allow_handler: 否
 allow_handler -> end_ok
 reject_401 -> end_fail
 reject_403 -> end_fail
+
+admin_forbidden.shape: rectangle
+admin_forbidden.style.fill: "#ffe8e8"
+allow_handler.shape: rectangle
+gen_jwt.shape: rectangle
+login_resp_fail.shape: rectangle
+next_req.shape: parallelogram
+next_req.style.fill: "#e7f8ec"
+reject_401.shape: rectangle
+reject_403.shape: rectangle
+save_state.shape: rectangle
+user_table.style.fill: "#eef5e9"
