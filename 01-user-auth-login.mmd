@@ -1,0 +1,40 @@
+%%{init: {
+%%  "theme": "base",
+%%  "themeVariables": {
+%%    "background": "#ffffff",
+%%    "primaryColor": "#e8f1ff",
+%%    "primaryBorderColor": "#3b82f6",
+%%    "primaryTextColor": "#0f172a",
+%%    "lineColor": "#64748b",
+%%    "secondaryColor": "#ecfeff",
+%%    "tertiaryColor": "#f8fafc"
+%%  }
+%%}}%%
+flowchart TD
+  A([开始]):::start_end --> B[前端提交登录<br/>POST /user/login]:::io
+  B --> C{用户名/密码正确?}:::decision
+  C -->|否| D[登录失败<br/>返回 400]:::process
+  D --> Z([结束]):::start_end
+
+  C -->|是| E[后端签发 JWT]:::process
+  E --> F[前端保存 token 到 Pinia]:::process
+  F --> G([登录成功]):::start_end
+
+  G --> H([后续请求]):::start_end
+  H --> I{免登录路径?}:::decision
+  I -->|是| J[直接放行]:::process
+  I -->|否| K{token 有效?}:::decision
+  K -->|否| L[返回 401 并跳转 /login]:::process
+  K -->|是| M{访问 /admin ?}:::decision
+  M -->|否| J
+  M -->|是| N{角色是 Admin ?}:::decision
+  N -->|否| O[返回 403]:::process
+  N -->|是| J
+  J --> P([接口处理完成]):::start_end
+  L --> Z
+  O --> Z
+
+  classDef start_end fill:#e2e8f0,stroke:#475569,color:#0f172a,stroke-width:1.5px;
+  classDef process fill:#e8f1ff,stroke:#3b82f6,color:#0f172a,stroke-width:1.2px;
+  classDef decision fill:#fff7ed,stroke:#f97316,color:#7c2d12,stroke-width:1.2px;
+  classDef io fill:#ecfeff,stroke:#06b6d4,color:#083344,stroke-width:1.2px;

@@ -1,0 +1,33 @@
+%%{init: {
+%%  "theme": "base",
+%%  "themeVariables": {
+%%    "background": "#ffffff",
+%%    "primaryColor": "#e8f1ff",
+%%    "primaryBorderColor": "#3b82f6",
+%%    "primaryTextColor": "#0f172a",
+%%    "lineColor": "#64748b",
+%%    "secondaryColor": "#ecfeff",
+%%    "tertiaryColor": "#f8fafc"
+%%  }
+%%}}%%
+flowchart TD
+  A([开始]):::start_end --> B[进入题库页 /questionset]:::process
+  B --> C[/输入筛选条件与分页参数/]:::io
+  C --> D[调用 GET /question/page]:::io
+  D --> E[后端查询 question 表<br/>条件 is_deleted = 0]:::process
+  E --> F[返回 total + questions]:::process
+  F --> G[前端渲染题目列表]:::process
+  G --> H{点击某题进入详情?}:::decision
+  H -->|否| Z([结束]):::start_end
+  H -->|是| I[调用 GET /question/query?id]:::io
+  I --> J{题目存在且未删除?}:::decision
+  J -->|否| K[返回失败消息]:::process
+  K --> Z
+  J -->|是| L[返回题目内容与元信息]:::process
+  L --> M[渲染题目详情页与页签]:::process
+  M --> N([进入答题/自测/题解流程]):::start_end
+
+  classDef start_end fill:#e2e8f0,stroke:#475569,color:#0f172a,stroke-width:1.5px;
+  classDef process fill:#e8f1ff,stroke:#3b82f6,color:#0f172a,stroke-width:1.2px;
+  classDef decision fill:#fff7ed,stroke:#f97316,color:#7c2d12,stroke-width:1.2px;
+  classDef io fill:#ecfeff,stroke:#06b6d4,color:#083344,stroke-width:1.2px;

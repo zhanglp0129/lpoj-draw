@@ -1,0 +1,45 @@
+%%{init: {
+%%  "theme": "base",
+%%  "themeVariables": {
+%%    "background": "#ffffff",
+%%    "primaryColor": "#e8f1ff",
+%%    "primaryBorderColor": "#3b82f6",
+%%    "primaryTextColor": "#0f172a",
+%%    "lineColor": "#64748b",
+%%    "secondaryColor": "#ecfeff",
+%%    "tertiaryColor": "#f8fafc"
+%%  }
+%%}}%%
+flowchart TD
+  A([开始]):::start_end --> B[访问 /admin 页面]:::process
+  B --> C{JWT 角色为 Admin?}:::decision
+  C -->|否| D[返回 403]:::process
+  D --> Z([结束]):::start_end
+  C -->|是| E{选择功能}:::decision
+
+  E -->|题目新增/编辑| F[POST/PUT /admin/question/*]:::io
+  F --> G[写入 question 表]:::process
+  G --> H[返回成功并刷新列表]:::process
+
+  E -->|题目删除| I[DELETE /admin/question?id]:::io
+  I --> J[软删除 is_deleted = 1]:::process
+  J --> H
+
+  E -->|测试用例新增| K[POST /admin/test_case/add]:::io
+  K --> L[事务: 写 DB + 上传 MinIO]:::process
+  L --> H
+
+  E -->|测试用例查询| M[GET /admin/test_case/all]:::io
+  M --> N[批量读取 MinIO 并返回预览]:::process
+  N --> H
+
+  E -->|测试用例删除| O[DELETE /admin/test_case/del?id]:::io
+  O --> P[删 DB 后尝试删 MinIO<br/>失败仅记日志]:::process
+  P --> H
+
+  H --> Z
+
+  classDef start_end fill:#e2e8f0,stroke:#475569,color:#0f172a,stroke-width:1.5px;
+  classDef process fill:#e8f1ff,stroke:#3b82f6,color:#0f172a,stroke-width:1.2px;
+  classDef decision fill:#fff7ed,stroke:#f97316,color:#7c2d12,stroke-width:1.2px;
+  classDef io fill:#ecfeff,stroke:#06b6d4,color:#083344,stroke-width:1.2px;
